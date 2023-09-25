@@ -67,3 +67,64 @@ touch ~/.zshrc
 ```bash
 terraform -install-autocomplete
 ```
+
+## :wrench: Working with Terraform
+
+1. Initialize Terraform
+   This installs the required providers and other plugins for our infrastructure.
+
+   ```bash
+   # run in the `root` dir
+   terraform init
+   ```
+
+2. Create a `.tfvars` from the `example.tfvars` template.
+
+3. Plan the cloud infrastructure
+   This command shows how many resources will be created, deleted or modified when we run `terraform apply`.
+
+   > NOTE: Remember to set your aws profile in the terminal to run the commands going forward
+
+   ```bash
+   export AWS_PROFILE=root
+   terraform plan -var-file="<filename>.tfvars"
+   ```
+
+4. Apply the changes/updates to the infrastructure to create it
+
+   ```bash
+   # execute the tf plan
+   # `--auto-approve` is to prevent tf from prompting you to say y/n to apply the plan
+   terraform apply --auto-approve -var-file="<filename>.tfvars"
+   ```
+
+5. To destroy your infrastructure, use the command:
+
+   ```bash
+   terraform destroy --auto-approve -var-file="<filename>.tfvars"
+   ```
+
+## :file_cabinet: Terraform Backend
+
+> NOTE: This is the recommended best practice.
+
+This is a storage location within AWS from where we access out `.tfstate` file.
+
+> All the information about the infrastructure resources are defined in the `.tfstate` file when we run `terraform apply`. So next time when we run `terraform apply`, it will only compare the *desired state* to the *actual state*.
+
+If we do not use a `backend` to store our `.tfstate` file, it is stored locally on a server (if we provision our infrastructure through a server) or on our local development workstation. The `.tfstate` file may also contain confidential credentials. In order to avoid these problems, it is recommended to use the terraform `backend` to store the `.tfstate` file.
+
+Now, when we run the `terraform apply` command, the `.tfstate` will be accessed through the AWS S3 bucket.
+
+> NOTE: The terraform `backend` does not allow the use of tfvars, so we hardcode these values in the configuration.
+
+```tf
+terraform {
+  backend "s3" {
+    bucket         = "tfstate-sid"
+    key            = "backend/infra-jenkins.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "infra-state"
+  }
+}
+```
