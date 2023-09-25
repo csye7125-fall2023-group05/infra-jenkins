@@ -1,0 +1,47 @@
+name: Terraform IaC template validation for Jenkins
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+jobs:
+  tf_validate:
+    runs-on: ubuntu-latest
+    name: Configure AWS `ghactions` IAM user
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create Terraform variables
+        run: |
+          cd root && touch prod.tfvars
+          echo REGION=${{ secrets.AWS_REGION }} >> prod.tfvars
+          echo ENV=${{ secrets.ENV }} >> prod.tfvars
+          echo VPC_CIDR_BLOCK=${{ secrets.VPC_CIDR_BLOCK }} >> prod.tfvars
+          echo PUBLIC_ROUTE_TABLE_CIDR_BLOCK=${{ secrets.PUBLIC_ROUTE_TABLE_CIDR_BLOCK }} >> prod.tfvars
+          echo PUBLIC_SUBNETS=${{ secrets.PUBLIC_SUBNETS }} >> prod.tfvars
+          echo PRIVATE_SUBNETS=${{ secrets.PRIVATE_SUBNETS }} >> prod.tfvars
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup `Terraform`
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate

@@ -78,9 +78,15 @@ terraform -install-autocomplete
    terraform init
    ```
 
-2. Create a `.tfvars` from the `example.tfvars` template.
+2. Create a `<filename>.tfvars` using the `example.tfvars` template.
 
-3. Plan the cloud infrastructure
+3. Validate the terraform configuration
+
+   ```bash
+      terraform validate
+   ```
+
+4. Plan the cloud infrastructure
    This command shows how many resources will be created, deleted or modified when we run `terraform apply`.
 
    > NOTE: Remember to set your aws profile in the terminal to run the commands going forward
@@ -90,7 +96,7 @@ terraform -install-autocomplete
    terraform plan -var-file="<filename>.tfvars"
    ```
 
-4. Apply the changes/updates to the infrastructure to create it
+5. Apply the changes/updates to the infrastructure to create it
 
    ```bash
    # execute the tf plan
@@ -98,7 +104,7 @@ terraform -install-autocomplete
    terraform apply --auto-approve -var-file="<filename>.tfvars"
    ```
 
-5. To destroy your infrastructure, use the command:
+6. To destroy your infrastructure, use the command:
 
    ```bash
    terraform destroy --auto-approve -var-file="<filename>.tfvars"
