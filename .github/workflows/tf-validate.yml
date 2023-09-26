@@ -10,25 +10,30 @@ on:
 jobs:
   tf_validate:
     runs-on: ubuntu-latest
+    environment: ${{ vars.ENVIRONMENT }}
     name: Configure AWS `ghactions` IAM user
     steps:
       - uses: actions/checkout@v3
       - name: Create Terraform variables
         run: |
           cd root && touch prod.tfvars
-          echo REGION=${{ secrets.AWS_REGION }} >> prod.tfvars
-          echo ENV=${{ secrets.ENV }} >> prod.tfvars
-          echo VPC_CIDR_BLOCK=${{ secrets.VPC_CIDR_BLOCK }} >> prod.tfvars
-          echo PUBLIC_ROUTE_TABLE_CIDR_BLOCK=${{ secrets.PUBLIC_ROUTE_TABLE_CIDR_BLOCK }} >> prod.tfvars
-          echo PUBLIC_SUBNETS=${{ secrets.PUBLIC_SUBNETS }} >> prod.tfvars
-          echo PRIVATE_SUBNETS=${{ secrets.PRIVATE_SUBNETS }} >> prod.tfvars
+          echo region=${{ vars.AWS_REGION }} >> prod.tfvars
+          echo env=${{ vars.ENV }} >> prod.tfvars
+          echo vpc_cidr_block=${{ vars.VPC_CIDR_BLOCK }} >> prod.tfvars
+          echo public_route_table_cidr_block=${{ vars.PUBLIC_ROUTE_TABLE_CIDR_BLOCK }} >> prod.tfvars
+          echo public_subnets=${{ vars.PUBLIC_SUBNETS }} >> prod.tfvars
+          echo private_subnets=${{ vars.PRIVATE_SUBNETS }} >> prod.tfvars
+          echo root_account_ids=${{ secrets.AMI_USERS }} >> prod.tfvars
+          echo ami_prefix=${{ vars.AMI_USERS }} >> prod.tfvars
+          echo instance_type=${{vars.INSTANCE_TYPE}} >> prod.tfvars
+          echo domain_name=${{vars.DOMAIN_NAME}} >> prod.tfvars
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ vars.AWS_REGION }}
 
       - name: Setup `Terraform`
         uses: hashicorp/setup-terraform@v2
