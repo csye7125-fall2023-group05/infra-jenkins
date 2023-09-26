@@ -1,5 +1,7 @@
 # Infrastructure setup for Jenkins
 
+[![Terraform IaC template validation for Jenkins](https://github.com/cyse7125-fall2023-group05/infra-jenkins/actions/workflows/tf-validate.yml/badge.svg?branch=master)](https://github.com/cyse7125-fall2023-group05/infra-jenkins/actions/workflows/tf-validate.yml)
+
 Hashicorp Terraform is a Infrastructure as Code tool which is used to provision infrastructure and manage resources in any cloud or data center.
 
 We will be using this tool to provision our Jenkins server.
