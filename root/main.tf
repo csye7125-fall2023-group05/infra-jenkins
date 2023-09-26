@@ -7,3 +7,20 @@ module "vpc" {
   public_subnets                = var.public_subnets
   private_subnets               = var.private_subnets
 }
+
+module "ec2" {
+  source           = "../modules/ec2"
+  root_account_ids = var.root_account_ids
+  ami_prefix       = var.ami_prefix
+  instance_type    = var.instance_type
+  public_subnets   = module.vpc.public_subnets
+  domain_name      = var.domain_name
+  igw_id           = module.vpc.igw_id
+  vpc_id           = module.vpc.vpc_id
+}
+
+module "route_53" {
+  source                       = "../modules/route53"
+  domain_name                  = var.domain_name
+  jenkins_server_eip_public_ip = module.ec2.jenkins_server_eip_public_ip
+}

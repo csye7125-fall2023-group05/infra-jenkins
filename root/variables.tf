@@ -32,6 +32,31 @@ variable "private_subnets" {
   type        = list(string)
 }
 
+variable "root_account_ids" {
+  description = "Karan, Sid, Rishab ROOT Account ids"
+  type        = list(string)
+  default     = ["835431937788", "547416033541", "078164504089"]
+}
+
+variable "ami_prefix" {
+  description = "AMI name prefix"
+  type        = string
+  default     = "CSYE7125-jenkins-*"
+}
+
+variable "instance_type" {
+  description = "ec2 instance type"
+  type        = string
+  default     = "t2.micro"
+}
+
+variable "domain_name" {
+  description = "hosted zone name"
+  type        = string
+  default     = "domain.tld"
+}
+
+
 # variable "profile" {
 #   description = "AWS profile"
 #   type        = string
