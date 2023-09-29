@@ -85,7 +85,7 @@ terraform -install-autocomplete
 3. Validate the terraform configuration
 
    ```bash
-      terraform validate
+   terraform validate
    ```
 
 4. Plan the cloud infrastructure
@@ -136,3 +136,9 @@ terraform {
   }
 }
 ```
+
+## 🔌 Elastic IP
+
+We will manually configure the elastic IP that we will associate and disassociate the IP with our Jenkins instance. To associate this with our `doman.tld`, we will also create an entry in our hosted zone for `A record`, which will contain the elastic IP configured in the previous step.
+
+This will enable our EC2 instance to be associated to the manually configured elastic IP everytime we setup our infrastructure using Terrform, and disassociate the elastic IP when we tear down our Infrastructure using Terraform.
