@@ -32,6 +32,14 @@ resource "aws_security_group" "jenkins_sg" {
   }
 
   ingress {
+    description = "SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
     description = "HTTPS"
     from_port   = 443
     to_port     = 443
@@ -60,14 +68,15 @@ resource "aws_network_interface" "jenkins_server_nic" {
   }
 }
 
-resource "aws_eip" "jenkins_server_eip" {
-  domain = "vpc"
+data "aws_eip" "jenkins_server_eip" {
+  tags = {
+    Name = "jenkins-server-eip"
+  }
+}
 
-  # instance   = aws_instance.jenkins_server.id
-  network_interface = aws_network_interface.jenkins_server_nic.id
-  depends_on        = [var.igw_id]
-
-  # TODO: tags
+resource "aws_eip_association" "jenkins_server_eip_association" {
+  network_interface_id = aws_network_interface.jenkins_server_nic.id
+  allocation_id        = data.aws_eip.jenkins_server_eip.id
 }
 
 resource "aws_instance" "jenkins_server" {
@@ -87,4 +96,3 @@ resource "aws_instance" "jenkins_server" {
     Name = "Jenkins Server"
   }
 }
-

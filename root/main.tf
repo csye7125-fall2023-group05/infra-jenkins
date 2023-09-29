@@ -18,9 +18,3 @@ module "ec2" {
   igw_id           = module.vpc.igw_id
   vpc_id           = module.vpc.vpc_id
 }
-
-module "route_53" {
-  source                       = "../modules/route53"
-  domain_name                  = var.domain_name
-  jenkins_server_eip_public_ip = module.ec2.jenkins_server_eip_public_ip
-}
