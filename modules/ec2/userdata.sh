@@ -3,9 +3,12 @@
 cd /etc/caddy/ || exit
 sudo mv Caddyfile Caddyfile.backup
 touch Caddyfile
-echo "${DOMAIN_NAME}" > domain.txt
+echo "${DOMAIN_NAME}" >domain.txt
 
-tee -a ./Caddyfile << END
+tee -a ./Caddyfile <<END
+{
+    acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+}
 ${DOMAIN_NAME} {
   root * /usr/share/caddy
   reverse_proxy localhost:8080

@@ -8,6 +8,11 @@ module "vpc" {
   private_subnets               = var.private_subnets
 }
 
+module "ssh" {
+  source       = "../modules/ssh"
+  ssh_key_file = var.ssh_key_file
+}
+
 module "ec2" {
   source           = "../modules/ec2"
   root_account_ids = var.root_account_ids
@@ -17,9 +22,5 @@ module "ec2" {
   domain_name      = var.domain_name
   igw_id           = module.vpc.igw_id
   vpc_id           = module.vpc.vpc_id
-}
-
-module "ssh" {
-  source       = "../modules/ssh"
-  ssh_key_file = var.ssh_key_file
+  ssh_key_name     = module.ssh.ssh_key_name
 }
