@@ -56,6 +56,11 @@ variable "domain_name" {
   default     = "domain.tld"
 }
 
+variable "ssh_key_file" {
+  description = "ssh-keygen generated public RSA key to SSH into an EC2 instance"
+  type        = string
+  default     = "ec2_ssh_key.pub"
+}
 
 # variable "profile" {
 #   description = "AWS profile"
