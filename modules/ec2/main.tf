@@ -82,6 +82,7 @@ resource "aws_eip_association" "jenkins_server_eip_association" {
 resource "aws_instance" "jenkins_server" {
   ami           = data.aws_ami.jenkins_ami.id
   instance_type = var.instance_type
+  key_name      = var.ssh_key_name
 
   network_interface {
     network_interface_id = aws_network_interface.jenkins_server_nic.id
