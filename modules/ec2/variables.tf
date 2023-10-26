@@ -6,3 +6,4 @@ variable "domain_name" {}
 variable "igw_id" {}
 variable "vpc_id" {}
 variable "ssh_key_name" {}
+variable "environment" {}

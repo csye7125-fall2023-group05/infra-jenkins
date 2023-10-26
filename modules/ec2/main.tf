@@ -90,7 +90,8 @@ resource "aws_instance" "jenkins_server" {
   }
 
   user_data = base64encode("${templatefile("../modules/ec2/userdata.sh", {
-    DOMAIN_NAME = "jenkins.${var.domain_name}"
+    DOMAIN_NAME = "jenkins.${var.domain_name}",
+    ENVIRONMENT = "${var.environment}"
   })}")
 
   tags = {

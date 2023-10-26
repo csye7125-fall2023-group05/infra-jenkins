@@ -1,18 +1,23 @@
 #!/bin/bash
 
 cd /etc/caddy/ || exit
-sudo mv Caddyfile Caddyfile.backup
+sudo mv Caddyfile Caddyfile.bkp
 touch Caddyfile
-echo "${DOMAIN_NAME}" >domain.txt
 
-tee -a ./Caddyfile <<END
-{
-    acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+if [ "$ENVIRONMENT" = "prod" ]; then
+  echo "${DOMAIN_NAME} {
+  root * /usr/share/caddy
+  reverse_proxy localhost:8080
+}" | tee ./Caddyfile
+else
+  echo "{
+  acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
 }
 ${DOMAIN_NAME} {
   root * /usr/share/caddy
   reverse_proxy localhost:8080
-}
-END
+}" | tee ./Caddyfile
+
+fi
 
 sudo systemctl restart caddy.service
