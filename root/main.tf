@@ -23,4 +23,5 @@ module "ec2" {
   igw_id           = module.vpc.igw_id
   vpc_id           = module.vpc.vpc_id
   ssh_key_name     = module.ssh.ssh_key_name
+  environment      = var.env
 }
